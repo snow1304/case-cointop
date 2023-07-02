@@ -1,0 +1,197 @@
+
+[project]
+name = ""
+version = ""
+description = ""
+authors = [
+    {name = "Mathieu Agneray", email = ""},
+]
+dependencies = [
+    "django>=4.2.2",
+    "coinapi-rest-v1>=1.3",
+    "pydantic>=2.0",
+    "django-crontab>=0.7.1",
+]
+requires-python = ">=3.10"
+license = {text = "MIT"}
+
+[project.optional-dependencies]
+dev = [
+    "black>=23.3.0",
+    "isort>=5.12.0",
+    "mypy>=1.4.1",
+    "pylint>=2.17.4",
+    "pytest>=7.4.0",
+    "pylint-django>=2.5.3",
+    "ipython>=8.14.0",
+    "pytest-django>=4.5.2",
+    "django-stubs[compatible-mypy]>=4.2.3",
+]
+
+[tool.pdm.scripts]
+# Project
+server = "python manage.py runserver"
+collecstatic = "python manage.py collectstatic"
+migration = "python manage.py makemigration"
+migrate = "python manage.py migrate"
+
+start = { composite=["collectstatic", "server"] }
+update = { composite=["migration", "migrate"] }
+
+# Format
+fmt = { composite=["fmt-black", "fmt-isort"] }
+
+fmt-black = "black ."
+black = "black --check ."
+
+fmt-isort = "isort ."
+isort = "isort -c ."
+
+# Linting
+lint-pylint = "pylint --django-settings-module=admin_cointop.settings cointop admin_cointop"
+lint-mypy = "mypy cointop"
+
+# test
+test = "pytest cointop"
+
+# Global
+cicd = { composite = ["black", "isort", "lint-pylint", "lint-mypy", "test"] }
+
+
+## Tools/Linting configurations
+[tool.black]
+target-version = ['py311']
+line-length = 88
+
+[tool.isort]
+multi_line_output = 3
+include_trailing_comma = true
+force_grid_wrap = 0
+use_parentheses = true
+line_length = 88
+
+## Linting (Pylint + pylint-django)
+
+[tool.pylint]
+
+[tool.pylint.MASTER]
+load-plugins = ["pylint_django"]
+django-settings-module = "admin_cointop.settings"
+extension-pkg-whitelist = "pydantic"
+
+[tool.pylint.FORMAT]
+max-line-length = 88
+
+[tool.pylint.'MESSAGES CONTROL']
+disable = [
+  "import-error",
+  "invalid-name",
+  "missing-module-docstring",
+  "missing-class-docstring",
+  "logging-format-interpolation",
+  "missing-function-docstring",
+  "fixme",
+  "inconsistent-return-statements",
+  "duplicate-code",
+  "too-few-public-methods",
+  "use-dict-literal",
+  "unused-wildcard-import",
+  "ungrouped-imports",
+  "line-too-long",
+  "unsubscriptable-object",
+  "logging-fstring-interpolation",
+]
+
+[tool.pylint.DESIGN]
+max-locals = 25
+max-args = 10
+max-attributes = 12
+max-parents = 10
+
+
+## Type checking (Mypy, +plugins)
+
+[tool.mypy]
+python_version = "3.11"
+plugins = [
+  "mypy_django_plugin.main",
+]
+strict_optional = true
+
+exclude = [
+  "dev_packages",
+  ".venv"
+]
+allow_redefinition = false
+check_untyped_defs = true
+disallow_untyped_decorators = true
+disallow_any_explicit = true
+disallow_any_generics = true
+disallow_untyped_calls = true
+ignore_errors = false
+ignore_missing_imports = true
+implicit_reexport = true
+local_partial_types = true
+strict_equality = true
+no_implicit_optional = true
+warn_unused_ignores = true
+warn_redundant_casts = true
+warn_unused_configs = true
+warn_unreachable = true
+warn_no_return = false
+
+[[tool.mypy.overrides]]
+module = "*.migrations.*"
+ignore_errors = true
+
+[tool.django-stubs]
+django_settings_module = "admin_cointop.settings"
+
+## Testing and coverage (Pytest)
+
+[tool.pytest.ini_options]
+minversion = "6.0"
+testpaths = ["tests"]
+# markers = [{unit="tests that are isolated from the db, external api calls and other mockable internal code."}]
+norecursedirs = "*.egg .eggs dist build docs .tox .git __pycache__ node_modules"
+timeout = 10
+# Ignore deprecation warnings from libs
+filterwarnings = [
+  'ignore::DeprecationWarning',
+]
+
+
+#  --reuse-db # to avoid creating a new database for each test
+# --reuse-db --reuse-db-keepdb # to avoid creating a new database for each test, but keep it after the test
+# --no-migrations # to avoid running migrations
+#   --cov-report=term-missing:skip-covered  --cov-report=html  --cov-fail-under=100
+addopts = """
+-v
+--doctest-modules
+--strict-markers
+--strict-config
+--fail-on-template-vars
+--tb=short
+"""
+
+# Pytest-django
+FAIL_INVALID_TEMPLATE_VARS = true
+DJANGO_SETTINGS_MODULE = "admin_cointop.settings"
+
+[tool.coverage.run]
+branch = true
+omit = ["*/tests/*", ".*", "*.txt"]
+source = ["cointop"]
+plugins = ["django_coverage_plugin"]
+
+[tool.coverage.report]
+fail_under = 50.0
+
+
+
+
+
+
+
+
+

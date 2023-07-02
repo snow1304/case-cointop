@@ -1,0 +1,30 @@
+{% load static %}
+
+<html>
+    <head>
+        <title>{% block title %}{% endblock %}</title>
+        <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" />
+        <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+        <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    </head>
+    <body class="bg-light sb-nav-fixed">
+        {% if user.is_authenticated %}
+            {% include 'components/nav.html' %}
+        {% endif %}
+        <div id="layoutSidenav">
+            {% if user.is_authenticated %}
+                {% include 'components/sidenav.html' %}
+            {% endif %}
+            <div id="layoutSidenav_content">
+                <main>
+                    <div class="container-fluid px-4">
+                        {% block content %}{% endblock %}
+                    </div>
+                </main>
+            </div>
+        </div>
+    </body>
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    {% block scripts %}{% endblock %}
+</html>

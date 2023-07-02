@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Cointop homepage{% endblock %}
+
+{% block content %}
+<h1 class="mt-4">Dashboard</h1>
+<div class="border rounded border-secondary mw-100 p-4">
+    <h3>Create an alert for BTC</h3>
+    <form class="row gy-2 gx-3 align-items-center" method="POST">
+        <div class="col-sm-1">
+            {{ alert_form.asset.label }}
+            {{ alert_form.asset }}
+        </div>
+        <div class="col-sm-1">
+            {{ alert_form.high_low.label }}
+            {{ alert_form.high_low }}
+        </div>
+        <div class="col-sm-1">
+            {{ alert_form.value.label }}
+            {{ alert_form.value }}
+        </div>
+        {% csrf_token %}
+        <div class="col-sm-1">
+            <input class="btn btn-primary" type="submit">
+        </div>
+    </form>
+</div>
+<hr/>
+<div class="mt-5">
+    {% for alert in alerts%}
+    <div id="{{ alert.id }}" class="row mt-2 border rounded border-secondary">
+        BTC
+        <div class="col-sm">{% if alert.high_low%}lower{% else %}higher{% endif %} than</div>
+        <div class="col-sm">{{ alert.value }}</div>
+        <div class="col-sm">{{ alert.asset }}</div>
+        <div class="col">
+            <button data-id="{{ alert.id }}" class="btn btn-danger m-1 delete-alert">delete</button>
+        </div>
+        <div class="mask flex-center rgba-green-slight"></div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", function(event) {
+    $('button.delete-alert').on('click', function() {
+        let div_id = $(this).data("id");
+        $.ajax({
+           url: "{% url 'homepage' %}?asset=" + $(this).data("id"),
+           headers:{
+                "X-CSRFToken": "{{ csrf_token }}"
+            },
+           type: "DELETE",
+        }).done(
+            function() {
+                console.log(`delete asset ${div_id}`)
+                $(`div#${div_id}`).remove();
+            }
+        ).fail(
+            function(){alert("Could not delete. Something went wrong");}
+    )});
+});
+</script>
+{% endblock %}
