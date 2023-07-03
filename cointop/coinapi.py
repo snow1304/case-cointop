@@ -21,7 +21,7 @@ def get_assets() -> typing.Generator["coinapi_validation.Asset", None, None]:
         except urllib.error.HTTPError:
             logging.error("Too many request to coinapi, waiting 30 seconds")
             time.sleep(30)
-            return get_assets()
+            yield from get_assets()
         cache.set("coinapi_metadata_list_assets", assets, 3600)
     for asset in assets:
         try:
@@ -43,10 +43,10 @@ def get_currencies_for_model() -> typing.Generator[typing.Tuple[str, str], None,
 
 def get_exchange_rate(asset: str) -> typing.Optional[float]:
     """Get BTC to currency rate"""
+    _coinapi: "restapi.CoinAPIv1" = restapi.CoinAPIv1(settings.COIN_API_KEY)
     try:
-        _coinapi: "restapi.CoinAPIv1" = restapi.CoinAPIv1(settings.COIN_API_KEY)
+        rate = _coinapi.exchange_rates_get_specific_rate("BTC", asset)
     except urllib.error.HTTPError:
         logging.warning("This exchange rate is not available BTC/%s", asset)
         return None
-    rate = _coinapi.exchange_rates_get_specific_rate("BTC", asset)
     return rate["rate"]

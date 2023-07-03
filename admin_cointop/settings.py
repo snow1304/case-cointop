@@ -24,7 +24,7 @@ BASE_CONFIG: decouple.AutoConfig = decouple.AutoConfig(search_path=BASE_DIR)
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY: typing.Final[
     str
-] = "django-insecure-d4@e!*ltbljyrt_9hbmy%%vtg15r$pwfj*-a0=qz=akba!a&05"
+] = BASE_CONFIG("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG: typing.Final[bool] = True
