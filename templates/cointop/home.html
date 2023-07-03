@@ -8,15 +8,12 @@
     <h3>Create an alert for BTC</h3>
     <form class="row gy-2 gx-3 align-items-center" method="POST">
         <div class="col-sm-1">
-            {{ alert_form.asset.label }}
             {{ alert_form.asset }}
         </div>
         <div class="col-sm-1">
-            {{ alert_form.high_low.label }}
             {{ alert_form.high_low }}
         </div>
         <div class="col-sm-1">
-            {{ alert_form.value.label }}
             {{ alert_form.value }}
         </div>
         {% csrf_token %}

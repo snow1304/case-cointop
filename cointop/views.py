@@ -31,7 +31,7 @@ class Home(mixins.LoginRequiredMixin, views.View):
         """Handle alerts creation"""
         if not request.user.is_authenticated:
             return shortcuts.redirect("login")
-        form = forms.AlertForm(request.POST)
+        form = forms.AlertForm(request.POST)  # type: ignore
         if form.is_valid():
             alert = form.save()
             alert.user.add(request.user)

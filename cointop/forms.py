@@ -13,9 +13,7 @@ class AlertForm(forms.ModelForm):
         model = models.Alert
         fields: typing.List[str] = ["asset", "high_low", "value"]
 
-    def __init__(
-        self: AFM, *args: typing.Mapping[str, typing.Any], **kwargs: typing.Dict
-    ) -> None:
-        super().__init__(args, kwargs)  # type: ignore
+    def __init__(self: AFM, *args: typing.List, **kwargs: typing.Dict) -> None:
+        super().__init__(*args, **kwargs)  # type: ignore
         for visible in self.visible_fields():
             visible.field.widget.attrs["class"] = "form-control"
