@@ -13,8 +13,10 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import pathlib
 import typing
 
-BASE_DIR: typing.Final[pathlib.Path] = pathlib.Path(__file__).resolve().parent.parent
+import decouple
 
+BASE_DIR: typing.Final[pathlib.Path] = pathlib.Path(__file__).resolve().parent.parent
+BASE_CONFIG: decouple.AutoConfig = decouple.AutoConfig(search_path=BASE_DIR)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -152,17 +154,7 @@ LOGOUT_REDIRECT_URL: typing.Final[str] = "/accounts/login"
 
 # Logging
 
-LOGGING: typing.Final[
-    typing.Dict[
-        str,
-        typing.Union[
-            int,
-            bool,
-            typing.Dict[str, typing.Dict[str, str]],
-            typing.Dict[str, typing.Union[typing.List[str], str]],
-        ],
-    ]
-] = {
+LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
     "handlers": {
@@ -184,5 +176,5 @@ CRONJOBS: typing.Final[typing.List[typing.Tuple[str, str]]] = [
 
 # CoinApi
 
-COIN_API_KEY: typing.Final[str] = "8983016B-81B3-41B2-81C5-5567590CDC0D"
+COIN_API_KEY: typing.Final[str] = BASE_CONFIG("COIN_API_KEY")
 COIN_API_ENDPOINT: typing.Final[str] = "https://rest.coinapi.io/v1"

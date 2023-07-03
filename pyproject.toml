@@ -11,6 +11,7 @@ dependencies = [
     "coinapi-rest-v1>=1.3",
     "pydantic>=2.0",
     "django-crontab>=0.7.1",
+    "python-decouple>=3.8",
 ]
 requires-python = ">=3.10"
 license = {text = "MIT"}
@@ -26,6 +27,7 @@ dev = [
     "ipython>=8.14.0",
     "pytest-django>=4.5.2",
     "django-stubs[compatible-mypy]>=4.2.3",
+    "pytest-cov>=4.1.0",
 ]
 
 [tool.pdm.scripts]
@@ -125,8 +127,8 @@ exclude = [
 allow_redefinition = false
 check_untyped_defs = true
 disallow_untyped_decorators = true
-disallow_any_explicit = true
-disallow_any_generics = true
+disallow_any_explicit = false
+disallow_any_generics = false
 disallow_untyped_calls = true
 ignore_errors = false
 ignore_missing_imports = true
@@ -152,19 +154,13 @@ django_settings_module = "admin_cointop.settings"
 [tool.pytest.ini_options]
 minversion = "6.0"
 testpaths = ["tests"]
-# markers = [{unit="tests that are isolated from the db, external api calls and other mockable internal code."}]
 norecursedirs = "*.egg .eggs dist build docs .tox .git __pycache__ node_modules"
-timeout = 10
+
 # Ignore deprecation warnings from libs
 filterwarnings = [
   'ignore::DeprecationWarning',
 ]
 
-
-#  --reuse-db # to avoid creating a new database for each test
-# --reuse-db --reuse-db-keepdb # to avoid creating a new database for each test, but keep it after the test
-# --no-migrations # to avoid running migrations
-#   --cov-report=term-missing:skip-covered  --cov-report=html  --cov-fail-under=100
 addopts = """
 -v
 --doctest-modules

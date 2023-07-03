@@ -9,14 +9,12 @@ class Alert(models.Model):
     """Alert model"""
 
     user = models.ManyToManyField(auth_models.User, related_name="alerts")
-    asset: models.CharField = models.CharField(
+    asset = models.CharField(
         max_length=7,
-        choices=sorted(
-            list(coinapi.get_currencies_for_model()), key=lambda item: item[1]
-        ),
+        choices=coinapi.get_currencies_for_model(),
         null=False,
     )
-    high_low: models.BooleanField = models.BooleanField(
+    high_low = models.BooleanField(
         choices=((True, "Lower than"), (False, "Higher than")), null=False
     )
-    value: models.FloatField = models.FloatField(null=False)
+    value = models.FloatField(null=False)

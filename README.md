@@ -6,6 +6,9 @@ Create a virtualenv using your prefered venv manager, then run `pdm install`
 
 Note, you can simply run pdm install if you have a default python interpreter >= 3.10
 
+Before starting the server copy the `.env.example` to `.env` and replace the
+`<YOUR_API_KEY>` by your coinapi key.
+
 Once all the packages have been installed start the application by using
 
 ```shell
@@ -25,3 +28,11 @@ pdm run manage.py createsuperuser
 ```
 
 And follow the steps
+
+
+## Install Cronjobs
+
+To install the pre-configured cronjobs, run
+```shell
+pdm run manage.py crontab add
+```
