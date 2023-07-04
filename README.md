@@ -9,7 +9,13 @@ Note, you can simply run pdm install if you have a default python interpreter >=
 Before starting the server copy the `.env.example` to `.env` and replace the
 `<YOUR_API_KEY>` by your coinapi key.
 
-Once all the packages have been installed start the application by using
+Once all the packages have been installed make the migrations with
+
+```shell
+pdm run manage.py migrate
+```
+
+And finally start the application with
 
 ```shell
 pdm run server
